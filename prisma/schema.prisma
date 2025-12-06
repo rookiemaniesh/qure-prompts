@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User{
+  id String @id @default(uuid())
+  email String @unique
+  firstName String
+  lastName String
+  password String
+  createdAt DateTime @default(now())
+  // prompt Prompt[]
+}
+model Prompt{
+  id Int @id @default(autoincrement())
+  prompt String @db.Text
+  model aiModel
+  title String 
+  desc String? @db.Text
+  createdAt DateTime @default(now())
+  views Int @default(0)
+  authorId String
+  // author User @relation(fields:[authorId], references:[id],onDelete:Cascade)
+  tags String[]
+
+}
+enum aiModel{
+gemini
+chatGPT
+perplexity
+claude
+deepseek
+midjourney
+other
+}
