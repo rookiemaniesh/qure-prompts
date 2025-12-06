@@ -1,12 +1,14 @@
 import Link from "next/link";
-import { Github, Search } from "lucide-react";
+import Image from "next/image";
+import { Github, Search, Plus, Smile } from "lucide-react";
+import { PromptCard } from "@/components/prompt-card";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-grid-pattern relative">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-8 py-3 border-b border-gray-200 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="text-xl font-bold tracking-tight">Qure - prompts</div>
+        <div className="text-xl font-bold tracking-tighter">Qure <span className="font-semibold text-gray-700"></span></div>
         <div className="flex items-center gap-4">
           <Link
             href="https://github.com"
@@ -33,32 +35,96 @@ export default function Home() {
 
         <div className="space-y-2 mb-12">
           <p className="text-xl md:text-2xl text-gray-600 font-medium">
-            Unlock high impact prompts you can launch instantly <br />or share with the community.
+            Unlock high impact prompts you can use instantly <br />
+            or <Link href="/add-prompt" className="inline-flex items-center gap-3 ml-2 px-2 py-2 bg-gray-100/80 hover:bg-gray-200/80 rounded-full transition-colors text-base font-normal align-middle group border border-gray-200/50">
+              <span className="text-gray-600 pl-2">Add your own</span>
+              <span className="w-8 h-8 flex items-center justify-center bg-gray-200/50 rounded-lg group-hover:bg-white transition-colors">
+                <span className="text-xs font-mono text-gray-500">{"-_"}</span>
+              </span>
+            </Link>
           </p>
 
         </div>
 
         {/* AI Model Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 max-w-3xl">
-          {["GPT-4", "Claude 3", "Gemini", "Llama 3", "Mistral", "Grok"].map((model) => (
+          {[
+            { name: "ChatGPT", icon: "/icons-model/chatgpt-icon.webp" },
+            { name: "Gemini", icon: "/icons-model/google-gemini-icon.svg" },
+            { name: "Claude", icon: "/icons-model/claude-ai-icon.svg" },
+            { name: "Grok", icon: "/icons-model/grok-icon.svg" },
+            { name: "Perplexity", icon: "/icons-model/perplexity-ai-icon.svg" },
+            { name: "Midjourney", icon: "/icons-model/midjourney-blue-icon.svg" },
+          ].map((model) => (
             <button
-              key={model}
-              className="px-6 py-2.5 rounded-full border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all text-sm font-medium"
+              key={model.name}
+              className="group flex items-center gap-2 px-6 py-2.5 rounded-full border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all text-sm font-medium text-gray-700 hover:text-black"
             >
-              {model}
+              <div className="relative w-5 h-5">
+                <Image
+                  src={model.icon}
+                  alt={model.name}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              {model.name}
             </button>
           ))}
         </div>
 
 
         {/* Search Bar */}
-        <div className="relative w-full max-w-2xl mt-12">
+        <div className="relative w-full max-w-lg mt-12">
           <input
             type="text"
             placeholder="Search prompts..."
-            className="w-full px-6 py-4 pl-14 text-lg bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-transparent shadow-sm hover:shadow-md transition-all"
+            className="w-full px-6 py-3 pl-12 text-base bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-transparent shadow-sm hover:shadow-md transition-all"
           />
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+        </div>
+
+        {/* Prompts Grid */}
+        <div className="w-full max-w-6xl mt-20 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <PromptCard
+              title="Video Ad Creator"
+              description="Writes ad scripts optimized for social media platforms"
+              tags={["video", "marketing", "AI"]}
+              rating={96}
+              featured={true}
+            />
+            <PromptCard
+              title="Fashion Stylist"
+              description="Creates outfit suggestions for occasions"
+              tags={["fashion", "style", "AI"]}
+              rating={42}
+            />
+            <PromptCard
+              title="Parenting Advisor"
+              description="Provides advice on handling parenting challenges"
+              tags={["parenting", "AI", "family"]}
+              rating={34}
+            />
+            <PromptCard
+              title="Dream Interpreter"
+              description="Analyzes dream symbols and meanings"
+              tags={["dreams", "AI", "psychology"]}
+              rating={38}
+            />
+            <PromptCard
+              title="Business Pitch Deck ..."
+              description="Generates slide content for startup presentations"
+              tags={["startups", "pitch", "AI"]}
+              rating={6}
+            />
+            <PromptCard
+              title="Meditation Guide"
+              description="Leads users in guided meditation sessions"
+              tags={["meditation", "AI", "wellness"]}
+              rating={5}
+            />
+          </div>
         </div>
       </main >
     </div >

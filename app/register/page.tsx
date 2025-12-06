@@ -6,7 +6,7 @@ export default function RegisterPage() {
             <div className="w-full max-w-md space-y-12">
                 {/* Header */}
                 <div>
-                    <p className="text-sm font-medium text-gray-500 mb-8">Vevo Brand Guidelines</p>
+                    <p className="text-sm font-medium text-gray-500 mb-8">qure guidelines</p>
                     <h1 className="text-6xl font-bold tracking-tight">Register</h1>
                 </div>
 
@@ -100,7 +100,7 @@ export default function RegisterPage() {
 
             {/* Footer Vevo Logo */}
             <div className="absolute bottom-8 right-8">
-                <span className="text-2xl font-bold tracking-tighter">vevo</span>
+                <span className="text-2xl font-bold tracking-tighter">qure</span>
             </div>
         </div>
     );

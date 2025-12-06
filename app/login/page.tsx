@@ -6,7 +6,7 @@ export default function LoginPage() {
             <div className="w-full max-w-md space-y-12">
                 {/* Header */}
                 <div>
-                    <p className="text-sm font-medium text-gray-500 mb-8">Vevo Brand Guidelines</p>
+                    <p className="text-sm font-medium text-gray-500 mb-8">qure guidelines</p>
                     <h1 className="text-6xl font-bold tracking-tight">Login</h1>
                 </div>
 
