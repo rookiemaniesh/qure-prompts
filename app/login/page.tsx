@@ -6,7 +6,7 @@ export default function LoginPage() {
             <div className="w-full max-w-md space-y-12">
                 {/* Header */}
                 <div>
-                    <p className="text-sm font-medium text-gray-500 mb-8">qure guidelines</p>
+                    <p className="text-sm font-medium text-gray-500 mb-8">Qure Guidelines</p>
                     <h1 className="text-6xl font-bold tracking-tight">Login</h1>
                 </div>
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
             {/* Footer Vevo Logo */}
             <div className="absolute bottom-8 right-8">
-                <span className="text-2xl font-bold tracking-tighter">qure</span>
+                <span className="text-2xl font-bold tracking-tighter">Qure</span>
             </div>
         </div>
     );

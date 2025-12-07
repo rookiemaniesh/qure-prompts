@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Github, Search, Plus, Smile } from "lucide-react";
 import { PromptCard } from "@/components/prompt-card";
+import { LandingFooter } from "@/components/footer";
 
 export default function Home() {
   return (
@@ -28,7 +29,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <main className="flex flex-col items-center justify-center pt-32 pb-16 px-4 text-center">
+      <main className="flex flex-col items-center justify-center pt-24 pb-16 px-4 text-center">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 max-w-4xl">
           Curated prompt systems <br /> for thinkers and makers
         </h1>
@@ -38,8 +39,8 @@ export default function Home() {
             Unlock high impact prompts you can use instantly <br />
             or <Link href="/add-prompt" className="inline-flex items-center gap-3 ml-2 px-2 py-2 bg-gray-100/80 hover:bg-gray-200/80 rounded-full transition-colors text-base font-normal align-middle group border border-gray-200/50">
               <span className="text-gray-600 pl-2">Add your own</span>
-              <span className="w-8 h-8 flex items-center justify-center bg-gray-200/50 rounded-lg group-hover:bg-white transition-colors">
-                <span className="text-xs font-mono text-gray-500">{"-_"}</span>
+              <span className="w-8 h-8 flex items-center justify-center bg-gray-200/50 rounded-lg  transition-colors">
+                <span className="text-xs font-mono text-gray-500">{">_"}</span>
               </span>
             </Link>
           </p>
@@ -85,7 +86,7 @@ export default function Home() {
         </div>
 
         {/* Prompts Grid */}
-        <div className="w-full max-w-6xl mt-20 px-4">
+        <div className="w-full max-w-6xl mt-12 px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <PromptCard
               title="Video Ad Creator"
@@ -93,38 +94,48 @@ export default function Home() {
               tags={["video", "marketing", "AI"]}
               rating={96}
               featured={true}
+              model="ChatGPT"
             />
             <PromptCard
               title="Fashion Stylist"
               description="Creates outfit suggestions for occasions"
               tags={["fashion", "style", "AI"]}
               rating={42}
+              model="Midjourney"
             />
             <PromptCard
               title="Parenting Advisor"
               description="Provides advice on handling parenting challenges"
               tags={["parenting", "AI", "family"]}
               rating={34}
+              model="ChatGPT"
             />
             <PromptCard
               title="Dream Interpreter"
               description="Analyzes dream symbols and meanings"
               tags={["dreams", "AI", "psychology"]}
               rating={38}
+              model="Claude"
             />
             <PromptCard
               title="Business Pitch Deck ..."
               description="Generates slide content for startup presentations"
               tags={["startups", "pitch", "AI"]}
               rating={6}
+              model="Gemini"
             />
             <PromptCard
               title="Meditation Guide"
               description="Leads users in guided meditation sessions"
               tags={["meditation", "AI", "wellness"]}
               rating={5}
+              model="Perplexity"
             />
           </div>
+        </div>
+
+        <div className="w-full mt-20">
+          <LandingFooter />
         </div>
       </main >
     </div >
