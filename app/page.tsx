@@ -126,7 +126,7 @@ export default function Home() {
             />
             <PromptCard
               title="Meditation Guide"
-              description="Leads users in guided meditation sessions"
+              description="Leads users in guided meditation sessions Generates slide content for startup presentations Generates slide content for startup presentations"
               tags={["meditation", "AI", "wellness"]}
               rating={5}
               model="Perplexity"

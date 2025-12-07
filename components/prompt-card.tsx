@@ -51,7 +51,7 @@ export function PromptCard({ title, description, tags, rating, featured, model }
                         {shouldTruncate && (
                             <span
                                 onClick={() => setIsDialogOpen(true)}
-                                className="text-gray-400 hover:text-black cursor-pointer ml-1 font-semibold transition-colors"
+                                className="text-blue-300 cursor-pointer ml-1  transition-colors"
                             >
                                 ...more
                             </span>
@@ -71,7 +71,7 @@ export function PromptCard({ title, description, tags, rating, featured, model }
                     <div className="h-px bg-gray-50 w-full mb-4"></div>
                     <div className="flex items-center justify-between">
                         <div className="flex gap-3 items-center">
-                            <div className="relative w-5 h-5 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+                            <div className="relative w-5 h-5 cursor-pointer transition-all duration-300">
                                 <Image
                                     src={iconSrc}
                                     alt={model}
