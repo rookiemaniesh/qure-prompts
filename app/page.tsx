@@ -118,7 +118,7 @@ export default function Home() {
               model="Claude"
             />
             <PromptCard
-              title="Business Pitch Deck ..."
+              title="Business Pitch Deck "
               description="Generates slide content for startup presentations"
               tags={["startups", "pitch", "AI"]}
               rating={6}
@@ -134,10 +134,11 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full mt-20">
+        
+      </main >
+      <div className="w-full mt-20 pr-5">
           <LandingFooter />
         </div>
-      </main >
     </div >
   );
 }

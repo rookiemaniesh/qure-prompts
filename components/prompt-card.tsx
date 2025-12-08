@@ -96,8 +96,8 @@ export function PromptCard({ title, description, tags, rating, featured, model }
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
                 title={title}
-                description={description} // Pass full description as content fallback
-                content={description} // Using description as content since we don't have separate content yet
+                description={description}
+                prompt={description} // Using description as prompt for now
             />
         </>
     );

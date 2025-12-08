@@ -8,25 +8,22 @@ interface PromptDetailDialogProps {
     onClose: () => void;
     title: string;
     description: string;
-    content?: string;
+    prompt: string;
     author?: string;
     date?: string;
 }
 
 const HIGHLIGHT_KEYWORDS = ["AI", "A", "for", "in", "with"];
 
-type Tab = "Prompt" | "Date of Creation (GMT)" | "Author";
-
 export function PromptDetailDialog({
     isOpen,
     onClose,
     title,
     description,
-    content,
+    prompt,
     author = "Unknown",
     date = "Oct 24, 2024"
 }: PromptDetailDialogProps) {
-    const [activeTab, setActiveTab] = useState<Tab>("Prompt");
     const [copied, setCopied] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -44,10 +41,8 @@ export function PromptDetailDialog({
 
     if (!isVisible && !isOpen) return null;
 
-    const displayContent = content || description || "No content available.";
-
     const handleCopy = () => {
-        navigator.clipboard.writeText(displayContent);
+        navigator.clipboard.writeText(prompt);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -88,28 +83,21 @@ export function PromptDetailDialog({
                         >
                             <X className="w-6 h-6 text-gray-500" />
                         </button>
+
                     </div>
-                    <p className="text-gray-500 text-sm">{description.slice(0, 60)}...</p>
+                    <p className=" flex justify-start text-gray-500 text-sm">{description}</p>
+
                 </div>
 
-                {/* Tabs & Content Container */}
+                {/* Content Container */}
                 <div className="px-8 pb-8">
                     <div className="border border-gray-200 rounded-2xl overflow-hidden">
-                        {/* Tab Bar */}
+                        {/* Control Bar */}
                         <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
                             <div className="flex gap-6">
-                                {(["Prompt", "Date of Creation (GMT)", "Author"] as const).map((tab) => (
-                                    <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab)}
-                                        className={`text-sm font-medium transition-colors ${activeTab === tab
-                                                ? "text-black bg-gray-100 px-3 py-1.5 rounded-lg"
-                                                : "text-gray-500 hover:text-black"
-                                            }`}
-                                    >
-                                        {tab}
-                                    </button>
-                                ))}
+                                <span className="text-sm font-medium text-black bg-gray-100 px-3 py-1.5 rounded-lg">
+                                    Prompt
+                                </span>
                             </div>
                             <div className="flex gap-2">
                                 <button className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-black transition-colors">
@@ -126,22 +114,20 @@ export function PromptDetailDialog({
                         </div>
 
                         {/* Content Area */}
-                        <div className="p-6 bg-white min-h-[200px] text-gray-800 text-[15px] leading-relaxed font-mono">
-                            {activeTab === "Prompt" && (
-                                <div>
-                                    {renderHighlightedContent(displayContent)}
-                                </div>
-                            )}
-                            {activeTab === "Date of Creation (GMT)" && (
-                                <div className="flex items-center justify-center h-full text-gray-500">
-                                    {date}
-                                </div>
-                            )}
-                            {activeTab === "Author" && (
-                                <div className="flex items-center justify-center h-full text-gray-500">
-                                    {author}
-                                </div>
-                            )}
+                        <div className="p-6 bg-white min-h-[200px] text-gray-800 text-[15px] leading-relaxed text-left whitespace-pre-wrap" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                            <div>
+                                {renderHighlightedContent(prompt)}
+                            </div>
+                        </div>
+
+                        {/* Footer Info */}
+                        <div className="flex items-center justify-between px-6 py-4 bg-gray-50/50 border-t border-gray-100 text-xs text-gray-500 font-medium">
+                            <div>
+                                Author: <span className="text-gray-700">{author}</span>
+                            </div>
+                            <div>
+                                Last updated at {date}
+                            </div>
                         </div>
                     </div>
                 </div>
