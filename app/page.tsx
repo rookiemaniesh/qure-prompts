@@ -5,7 +5,15 @@ import { PromptCard } from "@/components/prompt-card";
 import { LandingFooter } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 
-export default function Home() {
+import { prisma } from "@/lib/prisma";
+
+export default async function Home() {
+  const prompts = await prisma.prompt.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <div className="min-h-screen bg-grid-pattern relative">
       {/* Navbar */}
@@ -71,49 +79,18 @@ export default function Home() {
         {/* Prompts Grid */}
         <div className="w-full max-w-6xl mt-12 px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <PromptCard
-              title="Video Ad Creator"
-              description="Writes ad scripts optimized for social media platforms"
-              tags={["video", "marketing", "AI"]}
-              rating={96}
-              featured={true}
-              model="ChatGPT"
-            />
-            <PromptCard
-              title="Fashion Stylist"
-              description="Creates outfit suggestions for occasions"
-              tags={["fashion", "style", "AI"]}
-              rating={42}
-              model="Midjourney"
-            />
-            <PromptCard
-              title="Parenting Advisor"
-              description="Provides advice on handling parenting challenges"
-              tags={["parenting", "AI", "family"]}
-              rating={34}
-              model="ChatGPT"
-            />
-            <PromptCard
-              title="Dream Interpreter"
-              description="Analyzes dream symbols and meanings"
-              tags={["dreams", "AI", "psychology"]}
-              rating={38}
-              model="Claude"
-            />
-            <PromptCard
-              title="Business Pitch Deck "
-              description="Generates slide content for startup presentations"
-              tags={["startups", "pitch", "AI"]}
-              rating={6}
-              model="Gemini"
-            />
-            <PromptCard
-              title="Meditation Guide"
-              description="Leads users in guided meditation sessions Generates slide content for startup presentations Generates slide content for startup presentations"
-              tags={["meditation", "AI", "wellness"]}
-              rating={5}
-              model="Perplexity"
-            />
+            {prompts.map((prompt) => (
+              <PromptCard
+                key={prompt.id}
+                title={prompt.title}
+                description={prompt.desc || ""}
+                prompt={prompt.prompt}
+                tags={prompt.tags}
+                rating={prompt.views}
+                featured={false}
+                model={prompt.models[0] || "ChatGPT"}
+              />
+            ))}
           </div>
         </div>
 

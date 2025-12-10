@@ -48,17 +48,7 @@ export function PromptDetailDialog({
     };
 
     // Simple syntax highlighter
-    const renderHighlightedContent = (text: string) => {
-        const parts = text.split(/(\s+)/);
-        return parts.map((part, i) => {
-            if (HIGHLIGHT_KEYWORDS.includes(part)) {
-                return <span key={i} className="text-purple-500 font-medium">{part}</span>;
-            } else if (part === "AI") {
-                return <span key={i} className="text-cyan-500 font-medium">{part}</span>;
-            }
-            return part;
-        });
-    };
+
 
     return (
         <div
@@ -95,14 +85,12 @@ export function PromptDetailDialog({
                         {/* Control Bar */}
                         <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
                             <div className="flex gap-6">
-                                <span className="text-sm font-medium text-black bg-gray-100 px-3 py-1.5 rounded-lg">
+                                <span className="text-sm font-medium text-black  px-1 py-1.5 ">
                                     Prompt
                                 </span>
                             </div>
                             <div className="flex gap-2">
-                                <button className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-black transition-colors">
-                                    <Maximize2 className="w-4 h-4" />
-                                </button>
+
                                 <button
                                     onClick={handleCopy}
                                     className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-black transition-colors"
@@ -114,9 +102,9 @@ export function PromptDetailDialog({
                         </div>
 
                         {/* Content Area */}
-                        <div className="p-6 bg-white min-h-[200px] text-gray-800 text-[15px] leading-relaxed text-left whitespace-pre-wrap" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+                        <div className="p-5 bg-white min-h-[200px] max-h-[60vh] overflow-y-auto text-gray-800 text-[15px] leading-relaxed text-left whitespace-pre-wrap" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
                             <div>
-                                {renderHighlightedContent(prompt)}
+                                {prompt}
                             </div>
                         </div>
 
@@ -126,7 +114,7 @@ export function PromptDetailDialog({
                                 Author: <span className="text-gray-700">{author}</span>
                             </div>
                             <div>
-                                Last updated at {date}
+                                {date}
                             </div>
                         </div>
                     </div>

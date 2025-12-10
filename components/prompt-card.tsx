@@ -8,6 +8,7 @@ import { PromptDetailDialog } from "./prompt-detail-dialog";
 interface PromptCardProps {
     title: string;
     description: string;
+    prompt:string;
     tags: string[];
     rating: number; // We'll interpret this as 'views' for the new design
     featured?: boolean;
@@ -23,7 +24,7 @@ const MODEL_ICONS: Record<string, string> = {
     "Midjourney": "/icons-model/midjourney-blue-icon.svg",
 };
 
-export function PromptCard({ title, description, tags, rating, featured, model }: PromptCardProps) {
+export function PromptCard({ title, description, tags, rating, featured, model,prompt }: PromptCardProps) {
     const iconSrc = MODEL_ICONS[model] || MODEL_ICONS["ChatGPT"];
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -97,7 +98,7 @@ export function PromptCard({ title, description, tags, rating, featured, model }
                 onClose={() => setIsDialogOpen(false)}
                 title={title}
                 description={description}
-                prompt={description} // Using description as prompt for now
+                prompt={prompt} // Using description as prompt for now
             />
         </>
     );
