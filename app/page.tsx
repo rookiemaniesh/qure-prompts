@@ -1,32 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Search, Plus, Smile } from "lucide-react";
+import { Search } from "lucide-react";
 import { PromptCard } from "@/components/prompt-card";
 import { LandingFooter } from "@/components/footer";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-grid-pattern relative">
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-3 border-b border-gray-200 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="text-xl font-bold tracking-tighter">Qure <span className="font-semibold text-gray-700"></span></div>
-        <div className="flex items-center gap-4">
-          <Link
-            href="https://github.com"
-            target="_blank"
-            className="flex items-center gap-2 px-5 py-2 text-sm font-medium text-black bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors"
-          >
-            Github
-            <Github className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/login"
-            className="px-6 py-2 text-sm font-medium text-black bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors"
-          >
-            Login
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <main className="flex flex-col items-center justify-center pt-24 pb-16 px-4 text-center">
@@ -59,7 +42,7 @@ export default function Home() {
           ].map((model) => (
             <button
               key={model.name}
-              className="group flex items-center gap-2 px-6 py-2.5 rounded-full border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all text-sm font-medium text-gray-700 hover:text-black"
+              className="group flex items-center gap-2 px-6 py-2.5 rounded-full border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 transition-all text-sm font-medium text-gray-700 hover:text-black"
             >
               <div className="relative w-5 h-5">
                 <Image
@@ -134,11 +117,11 @@ export default function Home() {
           </div>
         </div>
 
-        
+
       </main >
       <div className="w-full mt-20 pr-5">
-          <LandingFooter />
-        </div>
+        <LandingFooter />
+      </div>
     </div >
   );
 }

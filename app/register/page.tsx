@@ -1,6 +1,46 @@
+'use client'
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RegisterPage() {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const router=useRouter()
+
+    const handleSubmit = async () => {
+        if (!email || !password || !firstName|| !lastName) {
+            setError("Please fill in all fields");
+            return;
+        }
+        
+        try {
+            const res=await fetch('api/auth/signup',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({email,password,lastName,firstName})
+            })
+            const data=await res.json()
+            if(!res.ok){
+                setError(data.error || 'An Error Occured') 
+                return
+            }
+            if(data.error){
+                setError(data.error)
+                return
+            }
+            router.push('/login');
+            router.refresh()
+        } catch (error) {
+           
+        }
+    };
     return (
         <div className="min-h-screen bg-white text-black flex  relative p-8 md:p-16 lg:p-20">
             <div className="w-full max-w-md space-y-12">
@@ -22,6 +62,10 @@ export default function RegisterPage() {
                                 type="text"
                                 className="w-full bg-transparent border-b border-gray-300 py-2 text-lg focus:outline-none focus:border-black transition-colors"
                                 placeholder=""
+                                value={firstName}
+                                onChange={(e)=>{
+                                    setFirstName(e.target.value)
+                                }}
                             />
                         </div>
                         <div className="space-y-2">
@@ -33,6 +77,10 @@ export default function RegisterPage() {
                                 type="text"
                                 className="w-full bg-transparent border-b border-gray-300 py-2 text-lg focus:outline-none focus:border-black transition-colors"
                                 placeholder=""
+                                value={lastName}
+                                onChange={(e)=>{
+                                    setLastName(e.target.value)
+                                }}
                             />
                         </div>
                     </div>
@@ -46,6 +94,10 @@ export default function RegisterPage() {
                             type="email"
                             className="w-full bg-transparent border-b border-gray-300 py-2 text-lg focus:outline-none focus:border-black transition-colors"
                             placeholder=""
+                            value={email}
+                                onChange={(e)=>{
+                                    setEmail(e.target.value)
+                                }}
                         />
                     </div>
                     <div className="space-y-2">
@@ -57,6 +109,10 @@ export default function RegisterPage() {
                             type="password"
                             className="w-full bg-transparent border-b border-gray-300 py-2 text-lg focus:outline-none focus:border-black transition-colors"
                             placeholder=""
+                            value={password}
+                                onChange={(e)=>{
+                                    setPassword(e.target.value)
+                                }}
                         />
                     </div>
                 </div>
@@ -64,11 +120,13 @@ export default function RegisterPage() {
                 {/* Actions */}
                 <div className="space-y-6">
                     <div className="flex items-center gap-4">
-                        <button className="px-8 py-3 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors">
+                        <button className="px-8 py-3 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors"
+                        onClick={handleSubmit}>
                             Sign Up
                         </button>
                         <span className="text-gray-400 text-sm">or</span>
-                        <button className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
+                        <button className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+                            onClick={() => signIn("google")}>
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -100,7 +158,7 @@ export default function RegisterPage() {
 
             {/* Footer Vevo Logo */}
             <div className="absolute bottom-8 right-8">
-                <span className="text-2xl font-bold tracking-tighter">Qure</span>
+                <span className="text-5xl font-bold tracking-tighter">Qure</span>
             </div>
         </div>
     );

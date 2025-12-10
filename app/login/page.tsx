@@ -1,6 +1,49 @@
+'use client'
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const router = useRouter()
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setError("Please fill in all fields")
+            return
+        }
+
+        try {
+            const res = await fetch('/api/auth/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+
+            const data = await res.json()
+
+            if (!res.ok) {
+                setError(data.error || "An error occurred")
+                return
+            }
+
+            if (data.error) {
+                setError(data.error)
+                return
+            }
+
+            router.push('/')
+            router.refresh()
+        } catch (err) {
+            setError("An error occurred. Please try again.")
+        }
+    }
+
     return (
         <div className="min-h-screen bg-white text-black flex relative p-8 md:p-16 lg:p-20">
             <div className="w-full max-w-md space-y-12">
@@ -12,6 +55,11 @@ export default function LoginPage() {
 
                 {/* Form */}
                 <div className="space-y-8">
+                    {error && (
+                        <div className="p-4 bg-red-50 text-red-500 rounded-lg text-sm">
+                            {error}
+                        </div>
+                    )}
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-500" htmlFor="email">
                             Email
@@ -19,6 +67,8 @@ export default function LoginPage() {
                         <input
                             id="email"
                             type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full bg-transparent border-b border-gray-300 py-2 text-lg focus:outline-none focus:border-black transition-colors"
                             placeholder=""
                         />
@@ -30,6 +80,8 @@ export default function LoginPage() {
                         <input
                             id="password"
                             type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="w-full bg-transparent border-b border-gray-300 py-2 text-lg focus:outline-none focus:border-black transition-colors"
                             placeholder=""
                         />
@@ -39,11 +91,15 @@ export default function LoginPage() {
                 {/* Actions */}
                 <div className="space-y-6">
                     <div className="flex items-center gap-4">
-                        <button className="px-8 py-3 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors">
+                        <button
+                            onClick={handleLogin}
+                            className="px-8 py-3 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition-colors"
+                        >
                             Log In
                         </button>
                         <span className="text-gray-400 text-sm">or</span>
-                        <button className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
+                        <button className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+                        onClick={()=>signIn("google")}>
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -75,7 +131,7 @@ export default function LoginPage() {
 
             {/* Footer Vevo Logo */}
             <div className="absolute bottom-8 right-8">
-                <span className="text-2xl font-bold tracking-tighter">Qure</span>
+                <span className="text-5xl font-bold tracking-tighter">Qure</span>
             </div>
         </div>
     );

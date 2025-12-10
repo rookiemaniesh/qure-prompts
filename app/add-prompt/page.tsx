@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { X, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -8,6 +9,49 @@ export default function AddPromptPage() {
     const [selectedModels, setSelectedModels] = useState<string[]>([]);
     const [tags, setTags] = useState<string[]>([]);
     const [currentTag, setCurrentTag] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [promptContent, setPromptContent] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const router = useRouter();
+
+    const handleSubmit = async () => {
+        if (!title || !promptContent || selectedModels.length === 0) {
+            setError("Please fill in title, content and select at least one model");
+            return;
+        }
+        setError("");
+        setLoading(true);
+
+        try {
+            const res = await fetch("/api/prompts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title,
+                    desc: description,
+                    prompt: promptContent,
+                    models: selectedModels,
+                    tags,
+                }),
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || "Failed to create prompt");
+            }
+
+            router.push("/");
+            router.refresh();
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const models = ["GPT-4", "Claude 3", "Gemini", "Llama 3", "Mistral", "Grok"];
 
@@ -65,6 +109,8 @@ export default function AddPromptPage() {
                                     id="title"
                                     type="text"
                                     className="w-full px-0 py-2 text-2xl bg-transparent border-b border-gray-200 focus:border-black focus:outline-none transition-all placeholder:text-gray-300 font-medium"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
                                     placeholder="e.g. Video Ad Creator"
                                 />
                             </div>
@@ -76,6 +122,8 @@ export default function AddPromptPage() {
                                     id="description"
                                     className="w-full h-[150px] p-6 text-base bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-none placeholder:text-gray-400"
                                     placeholder="Briefly describe what your prompt does..."
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
                                 ></textarea>
                             </div>
 
@@ -88,8 +136,8 @@ export default function AddPromptPage() {
                                             key={model}
                                             onClick={() => toggleModel(model)}
                                             className={`px-5 py-2.5 rounded-full text-sm font-medium border transition-all ${selectedModels.includes(model)
-                                                    ? "bg-black text-white border-black"
-                                                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                                                ? "bg-black text-white border-black"
+                                                : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
                                                 }`}
                                         >
                                             {model}
@@ -134,10 +182,13 @@ export default function AddPromptPage() {
 
                         {/* Right Column - Prompts */}
                         <div className="flex flex-col h-full gap-6">
+                            {error && <div className="text-red-500 text-sm">{error}</div>}
                             <label htmlFor="content" className="sr-only">Prompt Content</label>
                             <div className="flex-1 relative">
                                 <textarea
                                     id="content"
+                                    value={promptContent}
+                                    onChange={(e) => setPromptContent(e.target.value)}
                                     className="w-full h-full p-8 text-lg bg-gray-50/50 border border-gray-200 rounded-3xl focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-none font-mono placeholder:text-gray-400 leading-relaxed"
                                     placeholder="Write your prompt content here..."
                                 ></textarea>
@@ -145,8 +196,12 @@ export default function AddPromptPage() {
 
                             {/* Post Button (Outside the text area) */}
                             <div className="flex justify-end shrink-0">
-                                <button className="px-10 py-4 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-colors shadow-xl text-lg flex items-center gap-2">
-                                    Post Prompt
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={loading}
+                                    className="px-10 py-4 bg-black text-white font-medium rounded-full hover:bg-gray-800 transition-colors shadow-xl text-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {loading ? "Posting..." : "Post Prompt"}
                                 </button>
                             </div>
                         </div>

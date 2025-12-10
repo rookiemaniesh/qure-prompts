@@ -19,7 +19,7 @@ model User{
 model Prompt{
   id Int @id @default(autoincrement())
   prompt String @db.Text
-  model aiModel
+  models String[]
   title String 
   desc String? @db.Text
   createdAt DateTime @default(now())
@@ -28,13 +28,4 @@ model Prompt{
   // author User @relation(fields:[authorId], references:[id],onDelete:Cascade)
   tags String[]
 
-}
-enum aiModel{
-gemini
-chatGPT
-perplexity
-claude
-deepseek
-midjourney
-other
 }
