@@ -53,7 +53,7 @@ export default function AddPromptPage() {
         }
     };
 
-    const models = ["GPT-4", "Claude 3", "Gemini", "Llama 3", "Mistral", "Grok"];
+    const models = ["ChatGPT", "Claude", "Gemini", "Midjourney", "Perplexity", "Grok"];
 
     const toggleModel = (model: string) => {
         if (selectedModels.includes(model)) {

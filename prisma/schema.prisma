@@ -14,7 +14,7 @@ model User{
   lastName String
   password String
   createdAt DateTime @default(now())
-  // prompt Prompt[]
+  prompt Prompt[]
 }
 model Prompt{
   id Int @id @default(autoincrement())
@@ -25,7 +25,7 @@ model Prompt{
   createdAt DateTime @default(now())
   views Int @default(0)
   authorId String
-  // author User @relation(fields:[authorId], references:[id],onDelete:Cascade)
+  author User @relation(fields:[authorId], references:[id],onDelete:Cascade)
   tags String[]
 
 }

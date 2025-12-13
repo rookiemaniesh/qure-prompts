@@ -17,30 +17,21 @@ export default function LoginPage() {
         }
 
         try {
-            const res = await fetch('/api/auth/signin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            })
+            const res = await signIn("credentials", {
+                redirect: false,
+                email,
+                password,
+            });
 
-            const data = await res.json()
-
-            if (!res.ok) {
-                setError(data.error || "An error occurred")
-                return
+            if (res?.error) {
+                setError("Invalid email or password");
+                return;
             }
 
-            if (data.error) {
-                setError(data.error)
-                return
-            }
-
-            router.push('/')
-            router.refresh()
+            router.push("/");
+            router.refresh();
         } catch (err) {
-            setError("An error occurred. Please try again.")
+            setError("An error occurred. Please try again.");
         }
     }
 
@@ -99,7 +90,7 @@ export default function LoginPage() {
                         </button>
                         <span className="text-gray-400 text-sm">or</span>
                         <button className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
-                        onClick={()=>signIn("google")}>
+                            onClick={() => signIn("google")}>
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
                                 <path
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

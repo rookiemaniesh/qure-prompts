@@ -8,11 +8,11 @@ import { PromptDetailDialog } from "./prompt-detail-dialog";
 interface PromptCardProps {
     title: string;
     description: string;
-    prompt:string;
+    prompt: string;
     tags: string[];
     rating: number; // We'll interpret this as 'views' for the new design
     featured?: boolean;
-    model: string;
+    models: string[];
 }
 
 const MODEL_ICONS: Record<string, string> = {
@@ -22,10 +22,11 @@ const MODEL_ICONS: Record<string, string> = {
     "Grok": "/icons-model/grok-icon.svg",
     "Perplexity": "/icons-model/perplexity-ai-icon.svg",
     "Midjourney": "/icons-model/midjourney-blue-icon.svg",
+    "Dall-E": "/icons-model/dall-e-icon.png",
+    "Llama": "/icons-model/llama-icon.png",
 };
 
-export function PromptCard({ title, description, tags, rating, featured, model,prompt }: PromptCardProps) {
-    const iconSrc = MODEL_ICONS[model] || MODEL_ICONS["ChatGPT"];
+export function PromptCard({ title, description, tags, rating, featured, models, prompt }: PromptCardProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // Truncate logic
@@ -34,6 +35,9 @@ export function PromptCard({ title, description, tags, rating, featured, model,p
     const displayDescription = shouldTruncate
         ? description.slice(0, MAX_LENGTH).trim()
         : description;
+
+    const displayModels = models.length > 3 ? models.slice(0, 2) : models;
+    const remainingCount = models.length > 3 ? models.length - 2 : 0;
 
     return (
         <>
@@ -71,16 +75,29 @@ export function PromptCard({ title, description, tags, rating, featured, model,p
                 <div>
                     <div className="h-px bg-gray-50 w-full mb-4"></div>
                     <div className="flex items-center justify-between">
-                        <div className="flex gap-3 items-center">
-                            <div className="relative w-5 h-5 cursor-pointer transition-all duration-300">
-                                <Image
-                                    src={iconSrc}
-                                    alt={model}
-                                    fill
-                                    className="object-contain"
-                                />
-                            </div>
-                            {/* <MoreHorizontal className="w-5 h-5 text-gray-300" /> */}
+                        <div className="flex -space-x-2 items-center">
+                            {displayModels.map((modelName, index) => {
+                                const iconSrc = MODEL_ICONS[modelName] || MODEL_ICONS["ChatGPT"];
+                                return (
+                                    <div
+                                        key={index}
+                                        className="relative w-8 h-8 rounded-full bg-white border-2 border-white overflow-hidden shadow-sm"
+                                        title={modelName}
+                                    >
+                                        <Image
+                                            src={iconSrc}
+                                            alt={modelName}
+                                            fill
+                                            className="object-cover p-1"
+                                        />
+                                    </div>
+                                );
+                            })}
+                            {remainingCount > 0 && (
+                                <div className="relative w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center shadow-sm">
+                                    <MoreHorizontal className="w-4 h-4 text-gray-500" />
+                                </div>
+                            )}
                         </div>
                         <button
                             onClick={() => setIsDialogOpen(true)}
@@ -98,7 +115,7 @@ export function PromptCard({ title, description, tags, rating, featured, model,p
                 onClose={() => setIsDialogOpen(false)}
                 title={title}
                 description={description}
-                prompt={prompt} // Using description as prompt for now
+                prompt={prompt}
             />
         </>
     );

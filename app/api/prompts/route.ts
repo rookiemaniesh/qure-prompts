@@ -1,13 +1,13 @@
-import { getTokenFromRequest, verifyJwt } from '@/lib/auth';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma'
 import { promptSchema } from '@/lib/validators';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
     try {
-        // const token = getTokenFromRequest(req);
-        // const decoded = token ? verifyJwt(token) : null;
-        // if (!decoded?.userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await req.json();
         const p = promptSchema.safeParse(body);
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
                 desc: p.data.desc,
                 models: p.data.models,
                 tags: p.data.tags ?? [],
-                authorId: "abc"
+                authorId: session.user.id
             }
         })
         return NextResponse.json({

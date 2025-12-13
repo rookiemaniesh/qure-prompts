@@ -1,18 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Search } from "lucide-react";
-import { PromptCard } from "@/components/prompt-card";
 import { LandingFooter } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
+import { SearchInput } from "@/components/search-input";
+import { PromptGrid } from "@/components/prompt-grid";
+import { Suspense } from "react";
+import { PromptGridSkeleton } from "@/components/prompt-skeleton";
 
-import { prisma } from "@/lib/prisma";
-
-export default async function Home() {
-  const prompts = await prisma.prompt.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+export default async function Home(props: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+  const q = searchParams.q || "";
 
   return (
     <div className="min-h-screen bg-grid-pattern relative">
@@ -67,31 +66,13 @@ export default async function Home() {
 
 
         {/* Search Bar */}
-        <div className="relative w-full max-w-lg mt-12">
-          <input
-            type="text"
-            placeholder="Search prompts..."
-            className="w-full px-6 py-3 pl-12 text-base bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-transparent shadow-sm hover:shadow-md transition-all"
-          />
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-        </div>
+        <SearchInput />
 
         {/* Prompts Grid */}
         <div className="w-full max-w-6xl mt-12 px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {prompts.map((prompt) => (
-              <PromptCard
-                key={prompt.id}
-                title={prompt.title}
-                description={prompt.desc || ""}
-                prompt={prompt.prompt}
-                tags={prompt.tags}
-                rating={prompt.views}
-                featured={false}
-                model={prompt.models[0] || "ChatGPT"}
-              />
-            ))}
-          </div>
+          <Suspense key={q} fallback={<PromptGridSkeleton />}>
+            <PromptGrid searchParams={props.searchParams} />
+          </Suspense>
         </div>
 
 

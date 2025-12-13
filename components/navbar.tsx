@@ -23,7 +23,16 @@ export function Navbar() {
                 </Link>
                 {session ? (
                     <button
-                        onClick={() => signOut()}
+                        onClick={async () => {
+                            try {
+                                await fetch("/api/auth/custom-signout", {
+                                    method: "POST",
+                                });
+                            } catch (error) {
+                                console.error("Custom signout failed", error);
+                            }
+                            await signOut();
+                        }}
                         className="px-6 py-2 text-sm font-medium text-black bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition-colors"
                     >
                         Logout
