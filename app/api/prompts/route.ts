@@ -43,7 +43,7 @@ export async function GET(req: Request) {
     } catch (error) {
         console.error(error);
         return NextResponse.json({
-            error: "Interval Server Error!"
+            error: "Internal Server Error!"
         })
     }
 }
