@@ -6,6 +6,7 @@ import { useState } from "react";
 import { PromptDetailDialog } from "./prompt-detail-dialog";
 
 interface PromptCardProps {
+    id: number;
     title: string;
     description: string;
     prompt: string;
@@ -26,8 +27,26 @@ const MODEL_ICONS: Record<string, string> = {
     "Llama": "/icons-model/llama-icon.png",
 };
 
-export function PromptCard({ title, description, tags, rating, featured, models, prompt }: PromptCardProps) {
+export function PromptCard({ id, title, description, tags, rating, featured, models, prompt }: PromptCardProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [viewCount, setViewCount] = useState(rating);
+
+    const handleOpenDialog = async () => {
+        setIsDialogOpen(true);
+
+        // Increment view count
+        try {
+            const response = await fetch(`/api/prompts/${id}/view`, {
+                method: 'POST',
+            });
+            const data = await response.json();
+            if (data.views !== undefined) {
+                setViewCount(data.views);
+            }
+        } catch (error) {
+            console.error('Failed to increment view count:', error);
+        }
+    };
 
     // Truncate logic
     const MAX_LENGTH = 120;
@@ -46,7 +65,7 @@ export function PromptCard({ title, description, tags, rating, featured, models,
                     <div className="flex items-start justify-between mb-3">
                         <h3 className="font-bold text-lg text-left tracking-tight leading-tight">{title}</h3>
                         <div className="flex items-center gap-1.5 text-gray-400 text-xs bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
-                            <span className="font-medium">{rating}</span>
+                            <span className="font-medium">{viewCount}</span>
                             <Eye className="w-3.5 h-3.5" />
                         </div>
                     </div>
@@ -55,7 +74,7 @@ export function PromptCard({ title, description, tags, rating, featured, models,
                         {displayDescription}
                         {shouldTruncate && (
                             <span
-                                onClick={() => setIsDialogOpen(true)}
+                                onClick={handleOpenDialog}
                                 className="text-blue-300 cursor-pointer ml-1  transition-colors"
                             >
                                 ...more
@@ -100,7 +119,7 @@ export function PromptCard({ title, description, tags, rating, featured, models,
                             )}
                         </div>
                         <button
-                            onClick={() => setIsDialogOpen(true)}
+                            onClick={handleOpenDialog}
                             className="text-xs text-gray-400 hover:text-black transition-colors flex items-center gap-1 font-semibold group uppercase tracking-wide"
                         >
                             Preview
