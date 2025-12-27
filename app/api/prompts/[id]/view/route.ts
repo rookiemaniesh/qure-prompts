@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { deleteCachedPattern, CACHE_KEYS } from '@/lib/redis';
 
 export async function POST(
     req: Request,
@@ -21,6 +22,11 @@ export async function POST(
                 },
             },
         });
+
+        // Invalidate all cached prompt lists since view count changed
+        // This ensures the updated view count appears in list views
+        await deleteCachedPattern(`${CACHE_KEYS.PROMPTS_LIST}:*`);
+        console.log(`Invalidated prompt list caches after view increment for prompt ${promptId}`);
 
         return NextResponse.json({
             success: true,

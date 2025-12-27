@@ -3,6 +3,15 @@ import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma'
 import { promptSchema } from '@/lib/validators';
 import { NextResponse } from 'next/server';
+import {
+    getCached,
+    setCached,
+    deleteCachedPattern,
+    getPromptsListCacheKey,
+    CACHE_TTL,
+    CACHE_KEYS
+} from '@/lib/redis';
+
 
 export async function POST(req: Request) {
     try {
@@ -24,6 +33,11 @@ export async function POST(req: Request) {
                 authorId: session.user.id
             }
         })
+
+        // Invalidate all cached prompt lists since we added a new prompt
+        await deleteCachedPattern(`${CACHE_KEYS.PROMPTS_LIST}:*`);
+        console.log('Invalidated all prompt list caches after creating new prompt');
+
         return NextResponse.json({
             message: "Prompt Added!"
         })
@@ -42,6 +56,23 @@ export async function GET(req: Request) {
         const cursor = parseInt(searchParams.get('cursor') || '0');
         const limit = parseInt(searchParams.get('limit') || '9');
         const q = searchParams.get('q') || '';
+
+        // Generate cache key based on query parameters
+        const cacheKey = getPromptsListCacheKey(cursor, limit, q);
+
+        // Try to get from cache first
+        const cachedData = await getCached<{
+            prompts: any[];
+            nextCursor: number | null;
+            hasMore: boolean;
+        }>(cacheKey);
+
+        if (cachedData) {
+            console.log('Cache HIT for prompts list');
+            return NextResponse.json(cachedData);
+        }
+
+        console.log('Cache MISS for prompts list - querying database');
 
         const whereClause = q
             ? {
@@ -64,11 +95,16 @@ export async function GET(req: Request) {
         const hasMore = items.length > limit;
         const prompts = hasMore ? items.slice(0, limit) : items;
 
-        return NextResponse.json({
+        const responseData = {
             prompts,
             nextCursor: hasMore ? cursor + limit : null,
             hasMore,
-        });
+        };
+
+        // Cache the result
+        await setCached(cacheKey, responseData, CACHE_TTL.PROMPTS_LIST);
+
+        return NextResponse.json(responseData);
     } catch (error) {
         console.error(error);
         return NextResponse.json({
